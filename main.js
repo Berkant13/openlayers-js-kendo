@@ -27,8 +27,8 @@ vector = new ol.layer.Vector({
   }),
 });
 var wkt_drawend;
-get_feature();
 create_table();
+
 var map = new ol.Map({
   
   target: 'map',
@@ -161,28 +161,24 @@ function create_table(){
         { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" },
       ],
       editable: "popup",
-    });
-}
-function get_feature(){
-  $.ajax({
-    url: 'https://localhost:44382/api/location',
-    dataType: 'json',
-    type: 'get',
-    contentType: 'application/json',
-    data:{"data":"check"},
-    success: function(data){
-      for (var i in data){
-        var draw_wkt=data[i].wkt;
+      dataBound:function(e){
+        
+       for (let i=0;i<e.sender._data.length;  i++){
+        var draw_wkt=e.sender._data[i].wkt;
         var format=new ol.format.WKT();
         var feature = format.readFeature(draw_wkt, {
           dataProjection: 'EPSG:4326',
           featureProjection: 'EPSG:4326',
         });
+        
+        feature.id=e.sender._data[i].id;
+        feature.sehir=e.sender._data[i].sehir;
+        feature.ilce=e.sender._data[i].ilce;
         source.addFeature(feature);
-        feature.id=data[i].id;
-        feature.sehir=data[i].sehir;
-        feature.ilce=data[i].ilce;
-    } 
-  }
-});
+       }
+      }
+    });
+  
 }
+
+
