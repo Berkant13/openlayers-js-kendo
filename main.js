@@ -27,6 +27,7 @@ vector = new ol.layer.Vector({
   }),
 });
 var wkt_drawend;
+get_feature();
 create_table();
 var map = new ol.Map({
   
@@ -162,43 +163,26 @@ function create_table(){
       editable: "popup",
     });
 }
-function ajax_post(feature,wkt_drawend,sehir,ilce){
-  
+function get_feature(){
   $.ajax({
     url: 'https://localhost:44382/api/location',
     dataType: 'json',
-    type: 'post',
+    type: 'get',
     contentType: 'application/json',
-    data: JSON.stringify({'wkt':wkt_drawend,'sehir':sehir,'ilce':ilce}),
+    data:{"data":"check"},
     success: function(data){
-      feature.id=data;
-    },
+      for (var i in data){
+        var draw_wkt=data[i].wkt;
+        var format=new ol.format.WKT();
+        var feature = format.readFeature(draw_wkt, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:4326',
+        });
+        source.addFeature(feature);
+        feature.id=data[i].id;
+        feature.sehir=data[i].sehir;
+        feature.ilce=data[i].ilce;
+    } 
+  }
 });
-
 }
-function ajax_delete(id,new_wkt_drawend,new_sehir,new_ilce){
-  $.ajax({
-    url: 'https://localhost:44382/api/location',
-    dataType: 'json',
-    type: 'delete',
-    contentType: 'application/json',
-    data: JSON.stringify({'id':id,'wkt':new_wkt_drawend,'sehir':new_sehir,'ilce':new_ilce}),
-    success: log_deneme,
-}); 
-  
-
-}
-function ajax_update(id,new_wkt_drawend,new_sehir,new_ilce){
-  $.ajax({
-
-    url: 'https://localhost:44382/api/location/update',
-    dataType: 'json',
-    type: 'post',
-    contentType: 'application/json',
-    data: JSON.stringify({'id':id,'wkt':new_wkt_drawend,'sehir':new_sehir,'ilce':new_ilce}),
-    success: log_deneme,
-    
-});
-alert("WKT GÜNCELLENDİ.");
-}
-
