@@ -5,7 +5,6 @@ var vector;
 var wkt = new ol.format.WKT();
 const source = new ol.source.Vector();
 var extent_x = [];
-
 var extent_y = [];
 var extent = [];
 vector = new ol.layer.Vector({
@@ -28,7 +27,6 @@ vector = new ol.layer.Vector({
 });
 var wkt_drawend;
 create_table();
-
 var map = new ol.Map({
   
   target: 'map',
@@ -72,25 +70,21 @@ snap= new ol.interaction.Snap({
   source:source,
 });
 map.addInteraction(snap);
-
-
-
-
-
  draw.on('drawend',function(evt){ 
       feature_=evt.feature;
       wkt_drawend=wkt.writeFeature(evt.feature);
       modal.style.display = "block";
       
       ekle_button.onclick=function(){
+        modal.style.display = "none";
+        var sehir=document.getElementById("fname").value;
+        var ilce =document.getElementById("lname").value;
         feature_.sehir=sehir;
         feature_.ilce=ilce;
-        
-        post(feature_,wkt_drawend,sehir,ilce);
-       
-        modal.style.display = "none";
-        
-
+        post_ajax(feature_,wkt_drawend,sehir,ilce);
+        add_new_row(sehir,ilce,wkt_drawend);
+        document.getElementById("fname").value='';
+        document.getElementById("lname").value='';
       }
 
   });
@@ -137,7 +131,6 @@ function create_table(){
       },
 
       batch: true,
-      pageSize: 3,
       schema: {
         model: {
           id: "id",
@@ -163,7 +156,7 @@ function create_table(){
       editable: "popup",
       dataBound:function(e){
         
-       for (let i=0;i<e.sender._data.length;  i++){
+       for (let i=0;i<e.sender._data.length;i++){
         var draw_wkt=e.sender._data[i].wkt;
         var format=new ol.format.WKT();
         var feature = format.readFeature(draw_wkt, {
@@ -180,5 +173,21 @@ function create_table(){
     });
   
 }
+function post_ajax(feature,wkt_drawend,sehir,ilce){
+  
+  $.ajax({
+    url: 'https://localhost:44382/api/location',
+    dataType: 'json',
+    type: 'post',
+    contentType: 'application/json',
+    data: JSON.stringify({'wkt':wkt_drawend,'sehir':sehir,'ilce':ilce}),
+    success: function(data){
+      feature.id=data;
+    },
+});
+}
+function add_new_row(sehir_,ilce_,wkt_){
+  var grid = $("#grid").data("kendoGrid");
+  grid.dataSource.add({sehir:sehir_,ilce:ilce_,wkt:wkt_})
 
-
+}
