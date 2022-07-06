@@ -92,7 +92,12 @@ map.addInteraction(snap);
 
   });
 }
-
+modify.on('modifyend',function(evt){
+  wkt_modify=evt.features.getArray()[0];
+  ajax_update(wkt_modify.id,wkt.writeFeature(wkt_modify),wkt_modify.sehir,wkt_modify.ilce);
+  create_table();
+  
+})
 span.onclick = function() {
   modal.style.display = "none";
 }
@@ -222,4 +227,16 @@ function get_features(){
    
   }
 });
+}
+function ajax_update(id,new_wkt_drawend,new_sehir,new_ilce){
+  $.ajax({
+
+    url: 'https://localhost:44382/api/location/update',
+    dataType: 'json',
+    type: 'post',
+    contentType: 'application/json',
+    data: JSON.stringify({'id':id,'wkt':new_wkt_drawend,'sehir':new_sehir,'ilce':new_ilce}),
+    
+});
+  
 }
