@@ -27,6 +27,7 @@ vector = new ol.layer.Vector({
 });
 var wkt_drawend;
 create_table();
+get_features();
 var map = new ol.Map({
   
   target: 'map',
@@ -85,6 +86,8 @@ map.addInteraction(snap);
         add_new_row(sehir,ilce,wkt_drawend);
         document.getElementById("fname").value='';
         document.getElementById("lname").value='';
+        console.log(source.getFeatures());
+        create_table();
       }
 
   });
@@ -116,8 +119,16 @@ function create_table(){
           dataType: "json",
           contentType: "application/json; charset=utf-8"
         },
+        destroy: {
+          url: function(e) {
+             console.log(e);
+              return crudServiceBaseUrl + "/location?id=" + e.models[0].id;
+          }, 
+          type: "delete"
+      },
         
         parameterMap: function (options, operation) {
+          
           if (operation == "update" && options.models) {
             return JSON.stringify({
               id: options.models[0].id,
@@ -127,6 +138,14 @@ function create_table(){
              
           });
           }
+          if(operation=="destroy" ){
+           for(let i=0;i<source.getFeatures().length;i++){
+            if(source.getFeatures()[i].id==options.models[0].id){
+              source.removeFeature(source.getFeatures()[i]);
+            }
+          }
+          }
+          
         }
       },
 
@@ -154,22 +173,6 @@ function create_table(){
         { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" },
       ],
       editable: "popup",
-      dataBound:function(e){
-        
-       for (let i=0;i<e.sender._data.length;i++){
-        var draw_wkt=e.sender._data[i].wkt;
-        var format=new ol.format.WKT();
-        var feature = format.readFeature(draw_wkt, {
-          dataProjection: 'EPSG:4326',
-          featureProjection: 'EPSG:4326',
-        });
-        
-        feature.id=e.sender._data[i].id;
-        feature.sehir=e.sender._data[i].sehir;
-        feature.ilce=e.sender._data[i].ilce;
-        source.addFeature(feature);
-       }
-      }
     });
   
 }
@@ -190,4 +193,33 @@ function add_new_row(sehir_,ilce_,wkt_){
   var grid = $("#grid").data("kendoGrid");
   grid.dataSource.add({sehir:sehir_,ilce:ilce_,wkt:wkt_})
 
+}
+
+
+function get_features(){
+  
+  $.ajax({
+    url: 'https://localhost:44382/api/location',
+    dataType: 'json',
+    type: 'get',
+    contentType: 'application/json',
+    data:{"data":"check"},
+    success: function(data){
+      for (var i in data){
+        var draw_wkt=data[i].wkt;
+        var format = new ol.format.WKT();
+        var feature = format.readFeature(draw_wkt, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:4326',
+        });
+       source.addFeature(feature);
+       feature.id=data[i].id;
+       feature.sehir=data[i].sehir;
+       feature.ilce=data[i].ilce;
+       
+    } 
+ 
+   
+  }
+});
 }
