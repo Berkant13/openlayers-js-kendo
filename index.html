@@ -17,7 +17,55 @@
     rel="stylesheet"
     href="https://kendo.cdn.telerik.com/2021.3.1109/styles/kendo.default.mobile.min.css"
   />
- 
+  <h2>Map</h2>
+  <div id="map" class="map"> <label for="type" class="label">Geometry type: &nbsp;</label>
+    <select id="type">
+      <option value="Point">Point</option>
+      <option value="LineString">LineString</option>
+      <option value="Polygon">Polygon</option>
+    </select></div>
+    
+    <!-- The Modal -->
+<div id="myModal" class="modal">
+
+<!-- Modal content -->
+<div class="modal-content">
+  <div class="modal-header">
+    <span class="close">&times;</span>
+    <h2>OPENLAYERS</h2>
+  </div>
+  <div class="modal-body">
+    <label for="fname">Şehir:</label>
+    <input type="text" id="fname" name="fname"><br><br>
+    <label for="lname">İlçe: </label>
+    <input type="text" id="lname" name="lname"><br><br>
+    <div><button id="BTN">EKLE </button></div>
+  </div>
+  
+</div>
+
+
+</div>
+  <div id="grid">
+   
+  </div>
+  <div id="update_modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close" onclick="close_op();">&times;</span>
+        <h2>GÜNCELLEME</h2>
+      </div>
+      <div class="modal-body">
+        <label for="fname">GÜNCEL-Şehir:</label>
+        <input type="text" id="güncel_sehir" name="fname"><br><br>
+        <label for="lname">GÜNCEL-İlçe: </label>
+        <input type="text" id="güncel_ilce" name="lname"><br><br>
+        <div><button id="upbtn">GÜNCELLE </button></div>
+      </div>
+      
+    </div>
     
     <style>
       .map {
@@ -121,66 +169,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script src="https://kendo.cdn.telerik.com/2021.3.1109/js/kendo.all.min.js"></script>
-    
+    <script src="main.js"></script>
   </head>
   <body> 
-    
-    <h2>Map</h2>
-    <div id="map" class="map"> <label for="type" class="label">Geometry type: &nbsp;</label>
-      <select id="type">
-        <option value="Point">Point</option>
-        <option value="LineString">LineString</option>
-        <option value="Polygon">Polygon</option>
-      </select></div>
-      
-      <!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="close">&times;</span>
-      <h2>OPENLAYERS</h2>
-    </div>
-    <div class="modal-body">
-      <label for="fname">Şehir:</label>
-      <input type="text" id="fname" name="fname"><br><br>
-      <label for="lname">İlçe: </label>
-      <input type="text" id="lname" name="lname"><br><br>
-      <div><button id="BTN">EKLE </button></div>
-    </div>
-    
-  </div>
-  
-
-</div>
-    <div id="grid">
-     
-    </div>
-    <div id="update_modal" class="modal">
-
-      <!-- Modal content -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <span class="close" onclick="close_op();">&times;</span>
-          <h2>GÜNCELLEME</h2>
-        </div>
-        <div class="modal-body">
-          <label for="fname">GÜNCEL-Şehir:</label>
-          <input type="text" id="güncel_sehir" name="fname"><br><br>
-          <label for="lname">GÜNCEL-İlçe: </label>
-          <input type="text" id="güncel_ilce" name="lname"><br><br>
-          <div><button id="upbtn">GÜNCELLE </button></div>
-        </div>
-        
-      </div>
-      
-     
-      <script src="main.js"></script>
-  
-   
- 
- 
-
   </body>
 </html>
