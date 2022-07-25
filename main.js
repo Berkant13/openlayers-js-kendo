@@ -2,6 +2,7 @@ var tile_x = new ol.layer.Tile({
   source: new ol.source.OSM(),
 });
 var vector;
+console.log("deneme");
 var wkt = new ol.format.WKT();
 const source = new ol.source.Vector();
 var extent_x = [];
